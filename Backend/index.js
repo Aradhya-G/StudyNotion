@@ -14,6 +14,7 @@ const { cloudinaryConnect } = require('./config/cloudinary');
 const fileUpload = require('express-fileupload');
 const dotenv = require('dotenv');
 
+dotenv.config()
 const PORT = process.env.PORT || 2000;
 
 database.connect();
@@ -21,12 +22,19 @@ database.connect();
 app.use(express.json());
 app.use(cookieParser());
 
+// app.use(
+//     cors({
+//         origin: "http://localhost:3000",
+//         credentials: true
+//     })
+// )
+
 app.use(
-    cors({
-        origin: "http://localhost:3000",
-        credentials: true
-    })
-)
+	cors({
+		origin: "*",
+		credentials: true,
+	})
+);
 
 app.use(
     fileUpload({
