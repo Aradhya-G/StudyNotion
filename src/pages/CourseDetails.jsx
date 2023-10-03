@@ -4,7 +4,7 @@ import { HiOutlineGlobeAlt } from "react-icons/hi"
 import { ReactMarkdown } from "react-markdown/lib/react-markdown"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
-
+import { toast } from "react-hot-toast"
 import ConfirmationModal from "../components/common/ConfirmationModal"
 import Footer from "../components/common/Footer"
 import RatingStars from "../components/common/RatingStars"
@@ -13,7 +13,9 @@ import CourseDetailsCard from "../components/core/Course/CourseDetailsCard"
 import { formatDate } from "../services/formatDate"
 import { fetchCourseDetails } from "../services/operations/courseDetailsAPI"
 import { buyCourse } from "../services/operations/studentFeaturesAPI"
+import { ACCOUNT_TYPE } from "../../src/utils/constants"
 import GetAvgRating from "../utils/avgRating"
+import { addToCart } from "../slices/cartSlice"
 import Error from "./Error"
 
 function CourseDetails() {
@@ -44,7 +46,7 @@ function CourseDetails() {
     })()
   }, [courseId])
 
-  console.log("response: ", response)
+  // console.log("response: ", response)
 
   // Calculating Avg Review count
   const [avgReviewCount, setAvgReviewCount] = useState(0)
@@ -87,7 +89,7 @@ function CourseDetails() {
     return <Error />
   }
 
-  console.log(response.data)
+  // console.log("sbkjadbjdbejhcbehjcbf",response)
   const {
     _id: course_id,
     courseName,
@@ -98,9 +100,9 @@ function CourseDetails() {
     courseContent,
     ratingAndReviews,
     instructor,
-    studentsEnrolled,
+    studentEnrolled,
     createdAt,
-} = response.data
+} = response.data.courseDetails
 
   const handleBuyCourse = () => {
     if (token) {
@@ -110,6 +112,25 @@ function CourseDetails() {
     setConfirmationModal({
       text1: "You are not logged in!",
       text2: "Please login to Purchase Course.",
+      btn1Text: "Login",
+      btn2Text: "Cancel",
+      btn1Handler: () => navigate("/login"),
+      btn2Handler: () => setConfirmationModal(null),
+    })
+  }
+
+  const handleAddToCart = () => {
+    if (user && user?.accountType === ACCOUNT_TYPE.INSTRUCTOR) {
+      toast.error("You are an Instructor. You can't buy a course.")
+      return
+    }
+    if (token) {
+      dispatch(addToCart(response?.data?.courseDetails))
+      return
+    }
+    setConfirmationModal({
+      text1: "You are not logged in!",
+      text2: "Please login to add To Cart",
       btn1Text: "Login",
       btn2Text: "Cancel",
       btn1Handler: () => navigate("/login"),
@@ -152,8 +173,8 @@ function CourseDetails() {
               <div className="text-md flex flex-wrap items-center gap-2">
                 <span className="text-yellow-25">{avgReviewCount}</span>
                 <RatingStars Review_Count={avgReviewCount} Star_Size={24} />
-                {/* <span>{`(${ratingAndReviews.length} reviews)`}</span>
-                <span>{`${studentsEnrolled.length} students enrolled`}</span> */}
+                <span>{`(${ratingAndReviews?.length} reviews)`}</span>
+                <span>{`${studentEnrolled ? studentEnrolled.length : '0'} students enrolled`}</span>
               </div>
               <div>
                 <p className="">
@@ -178,7 +199,7 @@ function CourseDetails() {
               <button className="yellowButton" onClick={handleBuyCourse}>
                 Buy Now
               </button>
-              <button className="blackButton">Add to Cart</button>
+              <button  className="blackButton">Add to Cart</button>
             </div>
           </div>
           {/* Courses Card */}

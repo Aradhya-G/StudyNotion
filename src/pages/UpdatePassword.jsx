@@ -32,7 +32,6 @@ function UpdatePassword() {
     e.preventDefault()
     const token = location.pathname.split("/").at(-1)
     dispatch(resetPassword(password, confirmPassword, token, navigate))
-    console.log("tokekeken",token,password)
   }
  
 

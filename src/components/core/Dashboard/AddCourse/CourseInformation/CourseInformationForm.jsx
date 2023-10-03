@@ -56,7 +56,6 @@ export default function CourseInformationForm() {
         }
         getCategories()
         // console.log(course.tag)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const isFormUpdated = () => {

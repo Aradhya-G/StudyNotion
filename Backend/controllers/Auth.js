@@ -29,7 +29,7 @@ exports.sendOTP = async (req, res) => {
             specialChars: false
         });
 
-        console.log("OTP generated: ", otp)
+        // console.log("OTP generated: ", otp)
 
         let result = await OTP.findOne({ otp: otp });
 
@@ -45,7 +45,7 @@ exports.sendOTP = async (req, res) => {
         const otpPayload = { email, otp };
 
         const otpBody = await OTP.create(otpPayload)
-        console.log(otpBody);
+        // console.log(otpBody);
 
         res.status(200).json({
             success: true,
@@ -54,7 +54,7 @@ exports.sendOTP = async (req, res) => {
         });
     }
     catch (error) {
-        console.log(error);
+        // console.log(error);
         return res.status(500).json({
             success: false,
             message: error.message
@@ -110,7 +110,7 @@ exports.signup = async (req, res) => {
 
         // Find the most recent OTP for the email
         const response = await OTP.find({ email }).sort({ createdAt: -1 }).limit(1);
-        console.log(response);
+        // console.log(response);
         if (response.length === 0) {
             // OTP not found for the email
             return res.status(400).json({
@@ -271,7 +271,7 @@ exports.changePassword = async (req, res) => {
                     `Password updated successfully for ${updatedUserDetails.firstName} ${updatedUserDetails.lastName}`
                 )
             );
-            console.log("Email sent successfully:", emailResponse.response);
+            // console.log("Email sent successfully:", emailResponse.response);
         } catch (error) {
             // If there's an error sending the email, log the error and return a 500 (Internal Server Error) error
             console.error("Error occurred while sending email:", error);
@@ -287,7 +287,7 @@ exports.changePassword = async (req, res) => {
             .json({ success: true, message: "Password updated successfully" });
     } catch (error) {
         // If there's an error updating the password, log the error and return a 500 (Internal Server Error) error
-        console.error("Error occurred while updating password:", error);
+        // console.error("Error occurred while updating password:", error);
         return res.status(500).json({
             success: false,
             message: "Error occurred while updating password",
