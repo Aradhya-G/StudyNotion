@@ -8,7 +8,7 @@
 /.env
 /Backend/.env
 /Backend/config
-.gitignore
+/.gitignore
 
 # testing
 /coverage
