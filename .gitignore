@@ -7,7 +7,6 @@
 /Backend/node_modules
 /.env
 /Backend/.env
-/Backend/config
 /.gitignore
 
 # testing
